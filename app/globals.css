@@ -3558,3 +3558,805 @@ html[data-theme="light"] .sidebar .profile-dropdown .border-white\/10 {
 html[data-theme="light"] .sidebar .sidebar-bottom svg {
   color: #716b82;
 }
+
+
+/* ==========================================
+   LearnYah v0.3.9 — Mobile responsive repair
+   ========================================== */
+
+@media (max-width: 760px) {
+
+  /* Prevent mobile horizontal overflow */
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .app-shell {
+    width: 100%;
+    min-height: 100svh;
+    height: auto;
+    overflow-x: clip;
+  }
+
+  .main-area {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    height: auto;
+    min-height: 100svh;
+    padding: 0 16px;
+    overflow: visible;
+  }
+
+  /* HEADER */
+  .topbar {
+    height: 58px;
+    min-height: 58px;
+    margin: 0 -16px;
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .mobile-menu {
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+    margin: 0;
+  }
+
+  .breadcrumb {
+    flex: 1;
+    min-width: 0;
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .breadcrumb span {
+    margin: 0 4px;
+  }
+
+  .topbar-right {
+    flex: 0 0 auto;
+    gap: 6px;
+  }
+
+  .local-badge {
+    padding: 6px 8px;
+    font-size: 9px;
+    white-space: nowrap;
+  }
+
+  .theme-toggle {
+    min-width: 36px;
+    min-height: 34px;
+    padding: 7px;
+    gap: 5px;
+    font-size: 10px;
+  }
+
+  .help-button {
+    display: none;
+  }
+
+  /* HERO SECTION */
+  .page-heading {
+    display: block;
+    padding: 32px 0 24px;
+    overflow: visible;
+  }
+
+  .page-heading > div {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* LearningScene was not being hidden by the old
+     .heading-art mobile rule. */
+  .page-heading > .learning-scene {
+    display: none !important;
+  }
+
+  .eyebrow {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  .page-heading h1 {
+    max-width: 100%;
+    font-size: clamp(34px, 9vw, 43px);
+    line-height: 1.12;
+    letter-spacing: -1.7px;
+    overflow-wrap: normal;
+  }
+
+  .page-heading h1 span {
+    white-space: normal;
+  }
+
+  .page-heading .subtitle {
+    max-width: 100%;
+    margin-top: 13px;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  /* SUGGESTION CARDS */
+  .suggestion-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin: 4px 0 32px;
+  }
+
+  .suggestion-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+
+    width: 100%;
+    min-height: 88px;
+
+    /* Important: overrides the later 18px padding */
+    padding: 15px 42px 15px 64px;
+
+    border-radius: 16px;
+    text-align: left;
+  }
+
+  .suggestion-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    width: 36px;
+    height: 36px;
+    margin: 0;
+    font-size: 17px;
+  }
+
+  .suggestion-card strong {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .suggestion-card small {
+    margin-top: 4px;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  .card-arrow {
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  /* TUTOR INTRO */
+  .tutor-workspace {
+    padding-top: 0;
+  }
+
+  .tutor-intro-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 17px;
+  }
+
+  .tutor-intro-copy {
+    width: 100%;
+  }
+
+  .tutor-intro-copy h2 {
+    font-size: clamp(25px, 7vw, 31px);
+    line-height: 1.2;
+    letter-spacing: -1px;
+  }
+
+  .tutor-intro-copy p {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .tutor-presence {
+    align-self: flex-start;
+    padding: 9px 12px;
+  }
+
+  /* QUICK PROMPTS */
+  .tutor-prompt-row {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    overflow-x: auto;
+    max-width: 100%;
+    padding: 3px 2px 9px;
+    margin-bottom: 13px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tutor-prompt-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tutor-prompt-row button {
+    flex: 0 0 auto;
+    min-height: 39px;
+    padding: 9px 12px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  /* STUDY ROOM */
+  .tutor-chat-card {
+    width: 100%;
+    min-width: 0;
+    border-radius: 18px;
+  }
+
+  .chat-toolbar {
+    min-height: 62px;
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .session-identity {
+    min-width: 0;
+    gap: 8px;
+  }
+
+  .session-identity strong {
+    font-size: 12px;
+  }
+
+  .session-identity small {
+    font-size: 9px;
+  }
+
+  .session-actions {
+    flex: 0 0 auto;
+    gap: 6px;
+  }
+
+  .session-secure {
+    display: none;
+  }
+
+  .icon-button {
+    padding: 8px 9px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  /* WELCOME CONTENT */
+  .tutor-messages {
+    min-width: 0;
+    padding: 16px 12px;
+  }
+
+  .tutor-messages.is-empty {
+    min-height: 0 !important;
+  }
+
+  .tutor-welcome {
+    width: 100%;
+    min-width: 0;
+    padding: 8px 0 12px;
+  }
+
+  .welcome-copy {
+    width: 100%;
+  }
+
+  .welcome-copy h3 {
+    font-size: clamp(27px, 7.5vw, 35px);
+    line-height: 1.2;
+    letter-spacing: -1px;
+  }
+
+  .welcome-copy p {
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .starter-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    max-width: none;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .starter-grid button {
+    width: 100%;
+    min-height: 70px;
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .starter-grid strong {
+    font-size: 12px;
+  }
+
+  .starter-grid small {
+    font-size: 10px;
+    line-height: 1.4;
+  }
+
+  /* CHAT MESSAGES */
+  .message-item {
+    max-width: 100%;
+  }
+
+  .message-item .bubble {
+    max-width: calc(100% - 38px);
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+  }
+
+  .markdown-content {
+    min-width: 0;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+  }
+
+  .markdown-content pre {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  /* MESSAGE COMPOSER */
+  .tutor-composer {
+    width: 100%;
+    padding: 12px;
+    border-radius: 17px;
+  }
+
+  .composer-topline {
+    gap: 8px;
+  }
+
+  .composer-label {
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+
+  .composer-limit {
+    font-size: 9px;
+  }
+
+  .tutor-composer textarea {
+    width: 100%;
+    min-height: 70px;
+    max-height: 150px;
+    padding: 11px;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .tutor-composer .composer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .composer-tools {
+    min-width: 0;
+  }
+
+  .tutor-composer .source-toggle {
+    padding: 8px 9px;
+    font-size: 10px;
+    gap: 6px;
+  }
+
+  .tutor-composer .composer-shortcut,
+  .tutor-composer .privacy-hint {
+    display: none !important;
+  }
+
+  .tutor-composer .tutor-send {
+    flex: 0 0 46px;
+    width: 46px;
+    min-width: 46px;
+    height: 44px;
+    min-height: 44px;
+    padding: 0;
+  }
+
+  .tutor-composer .tutor-send span {
+    display: none;
+  }
+
+  .disclaimer {
+    padding: 0 5px;
+    font-size: 10px;
+    line-height: 1.5;
+  }
+
+  /* FOOTER */
+  .app-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    padding: 15px 0 24px;
+    font-size: 9px;
+  }
+
+  /* OTHER DASHBOARD VIEWS */
+  .upload-panel {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .upload-panel form {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .upload-panel form button {
+    flex: 1;
+  }
+
+  .document-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .quiz-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .quiz-builder,
+  .quiz-output {
+    padding: 17px;
+  }
+
+}
+
+/* Very small phones */
+@media (max-width: 380px) {
+  .main-area {
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+
+  .topbar {
+    margin-left: -13px;
+    margin-right: -13px;
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  .local-badge {
+    padding: 6px;
+    font-size: 8px;
+  }
+
+  .theme-toggle span {
+    font-size: 9px;
+  }
+
+  .page-heading h1 {
+    font-size: 34px;
+  }
+
+  .suggestion-card {
+    padding-left: 61px;
+  }
+}
+
+/* Mobile sidebar outside-click backdrop */
+
+.mobile-sidebar-backdrop {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .mobile-sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(2px);
+    cursor: pointer;
+    animation: backdropFadeIn 0.2s ease;
+  }
+
+  .sidebar {
+    z-index: 10;
+  }
+
+  .mobile-sidebar-backdrop:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+@keyframes backdropFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
+/* Mobile sidebar scroll management */
+
+@media (max-width: 720px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -275px;
+
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+
+    z-index: 100;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .mobile-sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+
+    touch-action: none;
+    overscroll-behavior: none;
+  }
+}
+
+
+
+/* ==========================================
+   LearnYah — Library mobile optimization
+   ========================================== */
+
+@media (max-width: 720px) {
+
+  /* Library page */
+  .view.active-view {
+    width: 100%;
+    max-width: 100%;
+    padding-bottom: 20px;
+  }
+
+  /* Page heading */
+  .compact-heading {
+    padding: 25px 0 20px;
+  }
+
+  .compact-heading .eyebrow {
+    margin-bottom: 9px;
+    font-size: 9px;
+    letter-spacing: 1.6px;
+  }
+
+  .compact-heading h1 {
+    font-size: clamp(32px, 9vw, 39px);
+    line-height: 1.12;
+    letter-spacing: -1.8px;
+  }
+
+  .compact-heading .subtitle {
+    font-size: 13px;
+    line-height: 1.6;
+    margin-top: 10px;
+    max-width: 100%;
+  }
+
+  /* Upload section */
+  .upload-panel {
+    width: 100%;
+    max-width: 100%;
+    min-height: auto;
+    height: auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+    padding: 25px 18px;
+
+    border-radius: 18px;
+    text-align: center;
+  }
+
+  .upload-symbol {
+    width: 52px;
+    height: 52px;
+    flex: 0 0 52px;
+    border-radius: 16px;
+    margin: 0;
+  }
+
+  .upload-copy {
+    width: 100%;
+    flex: none;
+    text-align: center;
+  }
+
+  .upload-copy h2 {
+    font-size: 17px;
+    margin: 0 0 8px;
+    line-height: 1.35;
+  }
+
+  .upload-copy p {
+    max-width: 290px;
+    margin: 0 auto 8px;
+    font-size: 12px;
+    line-height: 1.65;
+  }
+
+  .upload-copy small {
+    display: block;
+    font-size: 10px;
+    line-height: 1.5;
+    margin-top: 5px;
+  }
+
+  .upload-panel form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 5px;
+  }
+
+  .upload-panel form button {
+    flex: 0 0 auto;
+    min-height: 43px;
+    padding: 11px 20px;
+    font-size: 12px;
+  }
+
+  .status-message {
+    width: 100%;
+    font-size: 11px;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  /* Collection heading */
+  .library-list-heading {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+    margin: 27px 0 14px;
+  }
+
+  .library-list-heading > div {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .library-list-heading h2 {
+    font-size: 17px;
+    line-height: 1.35;
+  }
+
+  .library-list-heading p {
+    font-size: 11px;
+    line-height: 1.5;
+    margin-top: 4px;
+  }
+
+  .library-list-heading button {
+    flex: 0 0 auto;
+    min-height: 38px;
+    padding: 9px 11px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  /* Documents */
+  .document-grid {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 11px;
+  }
+
+  .document-card {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    gap: 12px;
+  }
+
+  .document-card strong {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .document-card small {
+    font-size: 10px;
+  }
+
+  /* Empty library */
+  .empty-library {
+    width: 100%;
+    padding: 30px 17px;
+    border-radius: 16px;
+  }
+
+  .empty-library span {
+    font-size: 32px;
+  }
+
+  .empty-library strong {
+    font-size: 14px;
+    margin-top: 9px;
+  }
+
+  .empty-library p {
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+}
+
+/* Extra small phones */
+@media (max-width: 380px) {
+
+  .main-area {
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+
+  .upload-panel {
+    padding: 22px 14px;
+  }
+
+  .library-list-heading {
+    gap: 7px;
+  }
+
+  .library-list-heading button {
+    padding: 8px;
+  }
+
+}

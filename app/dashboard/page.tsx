@@ -55,6 +55,43 @@ export default function HomePage() {
     return () => window.clearTimeout(timer);
   }, []);
 
+  // Lock background scrolling while mobile sidebar is open
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const isMobile = window.matchMedia("(max-width: 720px)").matches;
+
+    if (!isMobile) return;
+
+    const html = document.documentElement;
+    const body = document.body;
+
+    const previousHtmlOverflow = html.style.overflow;
+    const previousBodyOverflow = body.style.overflow;
+    const previousOverscroll = body.style.overscrollBehavior;
+
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    body.style.overscrollBehavior = "none";
+
+    // Close sidebar using Escape
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMobileOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      html.style.overflow = previousHtmlOverflow;
+      body.style.overflow = previousBodyOverflow;
+      body.style.overscrollBehavior = previousOverscroll;
+
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [mobileOpen]);
+
   // ------------------------------------
   // Dashboard entrance animation
   // Runs after the loader disappears
@@ -320,6 +357,16 @@ export default function HomePage() {
           : ""
       }`}
     >
+      {/* Mobile sidebar backdrop */}
+      {mobileOpen && (
+        <button
+          type="button"
+          className="mobile-sidebar-backdrop"
+          aria-label="Close navigation menu"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
       <Sidebar
         view={learnWise.view}
         documents={learnWise.documents}
