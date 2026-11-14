@@ -207,7 +207,7 @@ export function useLearnWise() {
           id: string;
           filename: string;
           chunk_count: number;
-        }>("/api/documents", {
+        }>("/documents", {
           method: "POST",
           data: formData,
         });
@@ -244,7 +244,7 @@ export function useLearnWise() {
       setUploadStatus("");
 
       try {
-        await apiRequest(`/api/documents/${documentId}`, {
+        await apiRequest(`/documents/${documentId}`, {
           method: "DELETE",
         });
 
@@ -280,7 +280,7 @@ export function useLearnWise() {
       setQuizResult("Preparing your practice questions…");
 
       try {
-        const result = await apiRequest<QuizResponse>("/api/quiz", {
+        const result = await apiRequest<QuizResponse>("/quiz", {
           method: "POST",
           data: {
             topic: topic.trim(),

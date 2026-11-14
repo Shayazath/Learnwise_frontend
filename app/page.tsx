@@ -323,7 +323,7 @@ export default function LandingPage() {
   const [activeFaq, setActiveFaq] = useState<number | null>(0);
   const [activeStep, setActiveStep] = useState(0);
   useEffect(() => {
-  api.get("/api/health").catch((error) => {
+  api.get("/health").catch((error) => {
     console.error("Database health check failed:", error);
   });
 }, []);
