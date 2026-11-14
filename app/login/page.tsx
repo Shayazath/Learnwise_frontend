@@ -90,13 +90,13 @@ export default function LoginPage() {
           disabled={loading}
           className="w-full rounded-xl bg-gradient-to-r from-violet-500 to-blue-500 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:-translate-y-0.5 hover:shadow-violet-500/40 disabled:opacity-50"
         >
-          {loading ? "Signing in..." : "Sign in to LearnWise →"}
+          {loading ? "Signing in..." : "Sign in to LearnYah →"}
         </button>
       </form>
 
       <div className="my-6 flex items-center gap-4">
         <div className="h-px flex-1 bg-white/10" />
-        <span className="text-xs text-slate-500">NEW TO LEARNWISE?</span>
+        <span className="text-xs text-slate-500">NEW TO LearnYah?</span>
         <div className="h-px flex-1 bg-white/10" />
       </div>
 

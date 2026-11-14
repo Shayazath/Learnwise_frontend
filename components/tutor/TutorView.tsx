@@ -256,7 +256,7 @@ export function TutorView({
                   <div className={`bubble ${item.role}`}>
                     {item.role === "assistant" && (
                       <strong>
-                        LearnWise <span>· AI tutor</span>
+                        LearnYah <span>· AI tutor</span>
                       </strong>
                     )}
                     <div
@@ -321,7 +321,7 @@ export function TutorView({
                 </span>
                 <div className="bubble assistant typing-bubble">
                   <strong>
-                    LearnWise <span>· thinking</span>
+                    LearnYah <span>· thinking</span>
                   </strong>
                   <div className="typing-dots">
                     <i />
@@ -396,7 +396,7 @@ export function TutorView({
           </form>
         </div>
         <p className="disclaimer">
-          <span>✦</span> LearnWise can make mistakes. Use trusted sources for
+          <span>✦</span> LearnYah can make mistakes. Use trusted sources for
           important decisions.
         </p>
       </section>

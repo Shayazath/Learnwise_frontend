@@ -148,7 +148,7 @@ export function LibraryView({
 
             <p className="text-sm leading-6 text-slate-400">
               Drag and drop your files here, or browse from your computer.
-              LearnWise will extract and index the content for your AI tutor.
+              LearnYah will extract and index the content for your AI tutor.
             </p>
 
             <p className="text-xs text-slate-500">

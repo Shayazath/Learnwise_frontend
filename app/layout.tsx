@@ -4,7 +4,7 @@ import { AuthProvider } from "@/app/providers/AuthProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "LearnWise — Learn in your own vibe",
+  title: "LearnYah — Learn in your own vibe",
   description:
     "A local-first AI learning space with a playful, focused interface.",
 };

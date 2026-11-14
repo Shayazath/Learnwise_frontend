@@ -46,7 +46,7 @@ export function QuizView({
           <div className="quiz-icon">✎</div>
           <h2>Create a practice quiz</h2>
           <p>
-            Choose a topic and LearnWise will prepare questions with answers and
+            Choose a topic and LearnYah will prepare questions with answers and
             explanations.
           </p>
 

@@ -30,7 +30,7 @@ export function ProfileView() {
     setEmail(user?.email ?? "");
   }, [user]);
 
-  const initials = (user?.full_name ?? "LearnWise User")
+  const initials = (user?.full_name ?? "LearnYah User")
     .trim()
     .split(/\s+/)
     .slice(0, 2)
@@ -99,7 +99,7 @@ export function ProfileView() {
 
             <div className="min-w-0 flex-1">
               <h2 className="truncate text-xl font-semibold text-white">
-                {user?.full_name ?? "LearnWise User"}
+                {user?.full_name ?? "LearnYah User"}
               </h2>
               <p className="mt-1 truncate text-sm text-white/50">
                 {user?.email}

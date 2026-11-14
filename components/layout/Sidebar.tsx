@@ -40,7 +40,7 @@ export function Sidebar({
   const [loggingOut, setLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState("");
 
-  const fullName = user?.full_name || "LearnWise User";
+  const fullName = user?.full_name || "LearnYah User";
   const email = user?.email || "";
 
   const initials = fullName
@@ -78,7 +78,7 @@ export function Sidebar({
         }}
       >
         <span className="brand-icon">L</span>
-        <span className="brand-name">LearnWise</span>
+        <span className="brand-name">LearnYah</span>
       </a>
 
       {/* New conversation */}

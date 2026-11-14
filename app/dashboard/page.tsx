@@ -393,7 +393,7 @@ export default function HomePage() {
         {/* Footer */}
         <footer className="app-footer">
           <span>
-            LearnWise <b>v0.3 · Next.js</b>
+            LearnYah <b>v0.3 · Next.js</b>
           </span>
 
           <span>

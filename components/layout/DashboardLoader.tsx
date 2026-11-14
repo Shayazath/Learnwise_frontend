@@ -139,7 +139,7 @@ export function DashboardLoader() {
           </div>
 
           <span className="text-xl font-extrabold tracking-tight">
-            LearnWise
+            LearnYah
           </span>
         </div>
 

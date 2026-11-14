@@ -177,9 +177,9 @@ export default function AiOrb() {
   }, []);
 
   return (
-    <div className="ai-orb" ref={hostRef} role="img" aria-label="Animated three-dimensional LearnWise AI orb">
+    <div className="ai-orb" ref={hostRef} role="img" aria-label="Animated three-dimensional LearnYah AI orb">
       <div className="ai-orb-fallback-mark">✳</div>
-      <span className="ai-orb-caption">LEARNWISE AI</span>
+      <span className="ai-orb-caption">LearnYah AI</span>
     </div>
   );
 }
