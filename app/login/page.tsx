@@ -14,7 +14,31 @@ export default function LoginPage() {
   const { login } = useAuth();
   const [checkingAuth, setCheckingAuth] = useState(true);
 
-  useEffect(() => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      await login({ email, password });
+      router.replace("/dashboard");
+    } catch (err) {
+      const axiosError = err as AxiosError<{ detail?: string }>;
+
+      setError(
+        axiosError.response?.data?.detail ||
+          "Unable to log in. Please try again.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+    useEffect(() => {
     let active = true;
 
     const checkAuth = async () => {
@@ -43,31 +67,6 @@ export default function LoginPage() {
       </div>
     );
   }
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-
-    try {
-      await login({ email, password });
-      router.replace("/dashboard");
-    } catch (err) {
-      const axiosError = err as AxiosError<{ detail?: string }>;
-
-      setError(
-        axiosError.response?.data?.detail ||
-          "Unable to log in. Please try again.",
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <AuthLayout

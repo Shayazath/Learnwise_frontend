@@ -34,35 +34,7 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState("");
   const [checkingAuth, setCheckingAuth] = useState(true);
 
-  useEffect(() => {
-    let active = true;
 
-    const checkAuth = async () => {
-      const authenticated = await isAuthenticated();
-
-      if (!active) return;
-
-      if (authenticated) {
-        router.replace("/dashboard");
-      } else {
-        setCheckingAuth(false);
-      }
-    };
-
-    checkAuth();
-
-    return () => {
-      active = false;
-    };
-  }, [router]);
-
-  if (checkingAuth) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-[#090812]">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-violet-400 border-t-transparent" />
-      </div>
-    );
-  }
 
   useEffect(() => {
     if (step !== "verify" || cooldown <= 0) {
@@ -189,6 +161,36 @@ export default function RegisterPage() {
     setSuccess("");
     setCooldown(0);
   };
+
+    useEffect(() => {
+    let active = true;
+
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+
+      if (!active) return;
+
+      if (authenticated) {
+        router.replace("/dashboard");
+      } else {
+        setCheckingAuth(false);
+      }
+    };
+
+    checkAuth();
+
+    return () => {
+      active = false;
+    };
+  }, [router]);
+
+  if (checkingAuth) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#090812]">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-violet-400 border-t-transparent" />
+      </div>
+    );
+  }
 
   return (
     <AuthLayout
