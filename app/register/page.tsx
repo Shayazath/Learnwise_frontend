@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -9,6 +8,7 @@ import { AxiosError } from "axios";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { resendOTP } from "@/lib/auth.service";
 import AuthLayout from "@/app/components/landing/AuthLayout";
+import { isAuthenticated } from "@/lib/auth-guard";
 
 type ApiError = {
   detail?: string;
@@ -17,14 +17,9 @@ type ApiError = {
 export default function RegisterPage() {
   const router = useRouter();
 
-  const {
-    register,
-    verifyRegistrationEmail,
-  } = useAuth();
+  const { register, verifyRegistrationEmail } = useAuth();
 
-  const [step, setStep] = useState<"register" | "verify">(
-    "register",
-  );
+  const [step, setStep] = useState<"register" | "verify">("register");
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -37,6 +32,37 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+
+      if (!active) return;
+
+      if (authenticated) {
+        router.replace("/dashboard");
+      } else {
+        setCheckingAuth(false);
+      }
+    };
+
+    checkAuth();
+
+    return () => {
+      active = false;
+    };
+  }, [router]);
+
+  if (checkingAuth) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#090812]">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-violet-400 border-t-transparent" />
+      </div>
+    );
+  }
 
   useEffect(() => {
     if (step !== "verify" || cooldown <= 0) {
@@ -53,15 +79,10 @@ export default function RegisterPage() {
   const getErrorMessage = (err: unknown, fallback: string) => {
     const axiosError = err as AxiosError<ApiError>;
 
-    return (
-      axiosError.response?.data?.detail ||
-      fallback
-    );
+    return axiosError.response?.data?.detail || fallback;
   };
 
-  const handleRegister = async (
-    e: React.FormEvent<HTMLFormElement>,
-  ) => {
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setError("");
@@ -104,9 +125,7 @@ export default function RegisterPage() {
     }
   };
 
-  const handleVerify = async (
-    e: React.FormEvent<HTMLFormElement>,
-  ) => {
+  const handleVerify = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setError("");
@@ -125,10 +144,7 @@ export default function RegisterPage() {
       router.replace("/dashboard");
     } catch (err) {
       setError(
-        getErrorMessage(
-          err,
-          "Unable to verify your email. Please try again.",
-        ),
+        getErrorMessage(err, "Unable to verify your email. Please try again."),
       );
     } finally {
       setLoading(false);
@@ -189,10 +205,7 @@ export default function RegisterPage() {
     >
       {step === "register" ? (
         <>
-          <form
-            onSubmit={handleRegister}
-            className="space-y-4"
-          >
+          <form onSubmit={handleRegister} className="space-y-4">
             <div>
               <label className="mb-2 block text-sm font-medium text-slate-300">
                 Full name
@@ -307,13 +320,7 @@ export default function RegisterPage() {
                 strokeLinejoin="round"
                 className="text-violet-300"
               >
-                <rect
-                  x="3"
-                  y="5"
-                  width="18"
-                  height="14"
-                  rx="2"
-                />
+                <rect x="3" y="5" width="18" height="14" rx="2" />
                 <path d="m3 7 9 6 9-6" />
               </svg>
             </div>
@@ -331,10 +338,7 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          <form
-            onSubmit={handleVerify}
-            className="space-y-5"
-          >
+          <form onSubmit={handleVerify} className="space-y-5">
             <div>
               <label
                 htmlFor="otp"
@@ -350,11 +354,7 @@ export default function RegisterPage() {
                 autoComplete="one-time-code"
                 value={otp}
                 onChange={(e) =>
-                  setOtp(
-                    e.target.value
-                      .replace(/\D/g, "")
-                      .slice(0, 6),
-                  )
+                  setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
                 }
                 placeholder="000000"
                 maxLength={6}
@@ -387,16 +387,12 @@ export default function RegisterPage() {
               disabled={loading || otp.length !== 6}
               className="w-full rounded-xl bg-gradient-to-r from-violet-500 to-blue-500 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:-translate-y-0.5 hover:shadow-violet-500/40 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {loading
-                ? "Verifying..."
-                : "Verify email and continue →"}
+              {loading ? "Verifying..." : "Verify email and continue →"}
             </button>
           </form>
 
           <div className="text-center">
-            <p className="text-sm text-slate-400">
-              Didn't receive the code?
-            </p>
+            <p className="text-sm text-slate-400">Didn't receive the code?</p>
 
             <button
               type="button"
@@ -420,8 +416,8 @@ export default function RegisterPage() {
           </button>
 
           <p className="text-center text-xs leading-5 text-slate-500">
-            Your verification code expires in 5 minutes.
-            Check your spam folder if you can't find the email.
+            Your verification code expires in 5 minutes. Check your spam folder
+            if you can't find the email.
           </p>
         </div>
       )}

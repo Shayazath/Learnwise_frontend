@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
-
+import { isAuthenticated } from "@/lib/auth-guard";
 import { useAuth } from "@/app/providers/AuthProvider";
 
 import AuthLayout from "@/app/components/landing/AuthLayout";
@@ -12,6 +12,37 @@ import AuthLayout from "@/app/components/landing/AuthLayout";
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+
+      if (!active) return;
+
+      if (authenticated) {
+        router.replace("/dashboard");
+      } else {
+        setCheckingAuth(false);
+      }
+    };
+
+    checkAuth();
+
+    return () => {
+      active = false;
+    };
+  }, [router]);
+
+  if (checkingAuth) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#090812]">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-violet-400 border-t-transparent" />
+      </div>
+    );
+  }
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
