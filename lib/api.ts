@@ -1,7 +1,7 @@
 import axios, { type AxiosRequestConfig } from "axios";
 
 export const api = axios.create({
-  baseURL: "/api",
+  baseURL: "/api/backend",
   withCredentials: true,
   timeout: 30000,
 });
