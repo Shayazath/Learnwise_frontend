@@ -57,7 +57,7 @@ export default function AuthLayout({
             <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-blue-500 shadow-lg shadow-violet-500/30">
               <span className="text-xl">✦</span>
             </span>
-            LearnWise
+            LearnYah
           </Link>
 
           <p className="mt-6 text-3xl font-semibold tracking-tight">
@@ -74,7 +74,7 @@ export default function AuthLayout({
         </section>
 
         <p className="mt-7 text-center text-xs text-slate-500">
-          LearnWise · Learn something extraordinary.
+          LearnYah · Learn something extraordinary.
         </p>
       </div>
     </main>

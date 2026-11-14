@@ -7,6 +7,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import StudyUniverse from "@/components/StudyUniverse";
 import * as THREE from "three";
+import { api } from "@/lib/api";
 gsap.registerPlugin(ScrollTrigger);
 
 function NeuralUniverse() {
@@ -321,6 +322,11 @@ export default function LandingPage() {
   const pageRef = useRef<HTMLDivElement>(null);
   const [activeFaq, setActiveFaq] = useState<number | null>(0);
   const [activeStep, setActiveStep] = useState(0);
+  useEffect(() => {
+  api.get("/api/health").catch((error) => {
+    console.error("Database health check failed:", error);
+  });
+}, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
