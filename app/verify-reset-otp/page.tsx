@@ -32,7 +32,7 @@ export default function VerifyResetOTPPage() {
 
     try {
       const response = await api.post(
-        "/api/auth/verify-reset-otp",
+        "/auth/verify-reset-otp",
         { email, otp }
       );
 

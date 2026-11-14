@@ -1,9 +1,7 @@
 import axios, { type AxiosRequestConfig } from "axios";
 
 export const api = axios.create({
-  baseURL:
-    process.env.NEXT_PUBLIC_API_BASE_URL ||
-    "http://localhost:8000",
+  baseURL: "/api/backend",
   withCredentials: true,
   timeout: 30000,
 });

@@ -153,7 +153,7 @@ export function useLearnWise() {
         const result = await apiRequest<{
           answer: string;
           sources: SourceItem[];
-        }>("/api/chat", {
+        }>("/chat", {
           method: "POST",
           data: {
             message: question,

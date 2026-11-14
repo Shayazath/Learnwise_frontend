@@ -1,10 +1,10 @@
 export const ENDPOINTS = {
-    REGISTER: "/api/auth/register",
-    LOGIN: "/api/auth/login",
-    LOGOUT: "/api/auth/logout",
-    CURRENT_USER: "/api/auth/me",
-    DOCUMENTS: "/api/documents",
-    DOCUMENT: (documentId: string) => `/api/documents/${documentId}`,
-    CHAT: (documentId: string) => `/api/documents/${documentId}/chat`,
-    QUIZ: (documentId: string) => `/api/documents/${documentId}/quiz`,
+    REGISTER: "/auth/register",
+    LOGIN: "/auth/login",
+    LOGOUT: "/auth/logout",
+    CURRENT_USER: "/auth/me",
+    DOCUMENTS: "/documents",
+    DOCUMENT: (documentId: string) => `/documents/${documentId}`,
+    CHAT: (documentId: string) => `/documents/${documentId}/chat`,
+    QUIZ: (documentId: string) => `/documents/${documentId}/quiz`,
 };
