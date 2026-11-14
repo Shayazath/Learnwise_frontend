@@ -5,20 +5,52 @@ import type {
   AuthResponse,
   LoginRequest,
   RegisterRequest,
+  RegistrationResponse,
+  ResendOTPResponse,
   User,
+  VerifyEmailPayload,
+  VerifyEmailResponse,
 } from "@/types";
+
+
 
 export const registerUser = async (
   payload: RegisterRequest,
-): Promise<AuthResponse> => {
-  const { data } = await api.post("/api/auth/register", payload);
+): Promise<RegistrationResponse> => {
+  const { data } = await api.post(
+    "/api/auth/register",
+    payload,
+  );
+  return data;
+};
+
+export const verifyEmail = async (
+  payload: VerifyEmailPayload,
+): Promise<VerifyEmailResponse> => {
+  const { data } = await api.post(
+    "/api/auth/verify-email",
+    payload,
+  );
+  return data;
+};
+
+export const resendOTP = async (
+  email: string,
+): Promise<ResendOTPResponse> => {
+  const { data } = await api.post(
+    "/api/auth/resend-otp",
+    { email },
+  );
   return data;
 };
 
 export const loginUser = async (
   payload: LoginRequest,
 ): Promise<AuthResponse> => {
-  const { data } = await api.post("/api/auth/login", payload);
+  const { data } = await api.post(
+    "/api/auth/login",
+    payload,
+  );
   return data;
 };
 
@@ -45,7 +77,10 @@ export type ChangePasswordPayload = {
 export const updateUserProfile = async (
   payload: ProfileUpdatePayload,
 ): Promise<User> => {
-  const { data } = await api.put("/api/auth/profile", payload);
+  const { data } = await api.put(
+    "/api/auth/profile",
+    payload,
+  );
   return data;
 };
 

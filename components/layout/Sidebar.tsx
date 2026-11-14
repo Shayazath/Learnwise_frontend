@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -166,13 +165,14 @@ export function Sidebar({
                 <p className="profile-name truncate text-sm font-semibold">
                   {fullName}
                 </p>
-                <p className="profile-email mt-1 truncate text-xs">
-                  {email}
-                </p>
+                <p className="profile-email mt-1 truncate text-xs">{email}</p>
               </div>
 
               <button
-                onClick={() => setProfileOpen(false)}
+                onClick={() => {
+                  setProfileOpen(false);
+                  onNavigate("profile");
+                }}
                 className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm text-white/75 transition hover:bg-white/[0.07] hover:text-white"
               >
                 <UserRound size={16} />
@@ -180,7 +180,10 @@ export function Sidebar({
               </button>
 
               <button
-                onClick={() => setProfileOpen(false)}
+                onClick={() => {
+                  setProfileOpen(false);
+                  onNavigate("settings");
+                }}
                 className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm text-white/75 transition hover:bg-white/[0.07] hover:text-white"
               >
                 <Settings size={16} />
@@ -206,7 +209,10 @@ export function Sidebar({
           )}
 
           {logoutError && (
-            <p role="alert" className="mb-2 rounded-lg bg-red-500/10 p-2 text-xs text-red-400">
+            <p
+              role="alert"
+              className="mb-2 rounded-lg bg-red-500/10 p-2 text-xs text-red-400"
+            >
               {logoutError}
             </p>
           )}

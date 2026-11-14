@@ -13,11 +13,16 @@ type Props = {
 export function AppHeader({
   view, theme, onToggleTheme, onToggleMobileMenu,
 }: Props) {
-  const title = view === "tutor"
+  const title =
+  view === "tutor"
     ? "AI Tutor"
     : view === "library"
       ? "My Library"
-      : "Practice Quiz";
+      : view === "quiz"
+        ? "Practice Quiz"
+        : view === "profile"
+          ? "My Profile"
+          : "Account Settings";
 
   return (
     <header className="topbar">

@@ -1,5 +1,11 @@
 
-export type ViewName = "tutor" | "library" | "quiz";
+export type ViewName =
+  | "tutor"
+  | "library"
+  | "quiz"
+  | "profile"
+  | "settings";
+
 export type ThemeName = "light" | "dark";
 
 export type User = {
@@ -48,4 +54,24 @@ export type QuizResponse = {
   quiz: string;
   sources: string[];
 };
+export type RegistrationResponse = {
+  message: string;
+  email: string;
+  expires_in: number;
+};
 
+export type VerifyEmailPayload = {
+  email: string;
+  otp: string;
+};
+
+export type VerifyEmailResponse = {
+  message: string;
+  user: User;
+};
+
+export type ResendOTPResponse = {
+  message: string;
+  email: string;
+  expires_in: number;
+};

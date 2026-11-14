@@ -1,326 +1,430 @@
 
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Scene3D from "@/app/components/landing/Scene3D";
+import { useRouter } from "next/navigation";
+import { AxiosError } from "axios";
 
-gsap.registerPlugin(ScrollTrigger);
+import { useAuth } from "@/app/providers/AuthProvider";
+import { resendOTP } from "@/lib/auth.service";
+import AuthLayout from "@/app/components/landing/AuthLayout";
 
-const features = [
-  {
-    number: "01",
-    icon: "✦",
-    title: "AI Personal Tutor",
-    description:
-      "Ask questions naturally and get contextual explanations that help you understand difficult concepts.",
-  },
-  {
-    number: "02",
-    icon: "◈",
-    title: "Your Knowledge Library",
-    description:
-      "Upload your learning materials and build a personal knowledge base that your AI tutor can understand.",
-  },
-  {
-    number: "03",
-    icon: "⌘",
-    title: "Smart Quiz Generation",
-    description:
-      "Turn your learning materials into interactive quizzes and test what you really understand.",
-  },
-];
+type ApiError = {
+  detail?: string;
+};
 
-export default function HomePage() {
-  const pageRef = useRef<HTMLDivElement>(null);
+export default function RegisterPage() {
+  const router = useRouter();
 
-  useLayoutEffect(() => {
-    const context = gsap.context(() => {
-      const intro = gsap.timeline({
-        defaults: { ease: "power3.out" },
+  const {
+    register,
+    verifyRegistrationEmail,
+  } = useAuth();
+
+  const [step, setStep] = useState<"register" | "verify">(
+    "register",
+  );
+
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [otp, setOtp] = useState("");
+  const [cooldown, setCooldown] = useState(0);
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  useEffect(() => {
+    if (step !== "verify" || cooldown <= 0) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setCooldown((previous) => Math.max(0, previous - 1));
+    }, 1000);
+
+    return () => window.clearTimeout(timer);
+  }, [step, cooldown]);
+
+  const getErrorMessage = (err: unknown, fallback: string) => {
+    const axiosError = err as AxiosError<ApiError>;
+
+    return (
+      axiosError.response?.data?.detail ||
+      fallback
+    );
+  };
+
+  const handleRegister = async (
+    e: React.FormEvent<HTMLFormElement>,
+  ) => {
+    e.preventDefault();
+
+    setError("");
+    setSuccess("");
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    if (password.length < 8) {
+      setError("Password must contain at least 8 characters.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await register({
+        full_name: fullName.trim(),
+        email: email.trim(),
+        password,
       });
 
-      intro
-        .fromTo(
-          ".hero-eyebrow",
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 0.6 },
-        )
-        .fromTo(
-          ".hero-title",
-          { opacity: 0, y: 35 },
-          { opacity: 1, y: 0, duration: 0.8 },
-          "-=0.3",
-        )
-        .fromTo(
-          ".hero-description, .hero-actions",
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 0.65, stagger: 0.15 },
-          "-=0.4",
-        );
+      setEmail(response.email);
+      setStep("verify");
+      setCooldown(60);
+      setOtp("");
 
-      gsap.fromTo(
-        ".feature-card",
-        { opacity: 0, y: 45 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.75,
-          stagger: 0.15,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ".features-section",
-            start: "top 75%",
-          },
-        },
+      setSuccess("Verification code sent to your email address.");
+    } catch (err) {
+      setError(
+        getErrorMessage(
+          err,
+          "Unable to create your account. Please try again.",
+        ),
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerify = async (
+    e: React.FormEvent<HTMLFormElement>,
+  ) => {
+    e.preventDefault();
+
+    setError("");
+    setSuccess("");
+
+    if (!/^\d{6}$/.test(otp)) {
+      setError("Please enter a valid six-digit OTP.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await verifyRegistrationEmail(email, otp);
+
+      router.replace("/dashboard");
+    } catch (err) {
+      setError(
+        getErrorMessage(
+          err,
+          "Unable to verify your email. Please try again.",
+        ),
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendOTP = async () => {
+    setError("");
+    setSuccess("");
+    setLoading(true);
+
+    try {
+      const response = await resendOTP(email);
+
+      setCooldown(60);
+      setOtp("");
+      setSuccess(response.message);
+    } catch (err) {
+      const message = getErrorMessage(
+        err,
+        "Unable to resend OTP. Please try again.",
       );
 
-      gsap.fromTo(
-        ".steps-section",
-        { opacity: 0, y: 35 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          scrollTrigger: {
-            trigger: ".steps-section",
-            start: "top 80%",
-          },
-        },
-      );
+      setError(message);
 
-      gsap.fromTo(
-        ".final-cta",
-        { opacity: 0, scale: 0.96 },
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 0.8,
-          scrollTrigger: {
-            trigger: ".final-cta",
-            start: "top 85%",
-          },
-        },
-      );
-    }, pageRef);
+      // If the backend returns a resend cooldown, use its
+      // remaining-seconds message for the frontend countdown.
+      const match = message.match(/wait\s+(\d+)\s+seconds/i);
 
-    return () => context.revert();
-  }, []);
+      if (match) {
+        setCooldown(Number(match[1]));
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChangeEmail = () => {
+    setStep("register");
+    setOtp("");
+    setError("");
+    setSuccess("");
+    setCooldown(0);
+  };
 
   return (
-    <main
-      ref={pageRef}
-      className="min-h-screen overflow-hidden bg-[#080817] text-white"
+    <AuthLayout
+      heading={
+        step === "register"
+          ? "Start learning differently."
+          : "Verify your email."
+      }
+      description={
+        step === "register"
+          ? "Create your account and make knowledge yours."
+          : "One quick step before your LearnWise journey begins."
+      }
     >
-      {/* Navigation */}
-      <header className="relative z-30 mx-auto flex max-w-7xl items-center justify-between px-6 py-6 lg:px-10">
-        <Link href="/" className="flex items-center gap-3 text-xl font-bold">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-blue-500 shadow-lg shadow-violet-500/30">
-            ✦
-          </span>
-          LearnWise
-        </Link>
-
-        <nav className="hidden items-center gap-9 text-sm text-slate-400 md:flex">
-          <a href="#features" className="transition hover:text-white">
-            Features
-          </a>
-          <a href="#how-it-works" className="transition hover:text-white">
-            How it works
-          </a>
-          <a href="#about" className="transition hover:text-white">
-            About
-          </a>
-        </nav>
-
-        <div className="flex items-center gap-3">
-          <Link
-            href="/login"
-            className="hidden rounded-full px-5 py-2.5 text-sm text-slate-300 transition hover:text-white sm:block"
+      {step === "register" ? (
+        <>
+          <form
+            onSubmit={handleRegister}
+            className="space-y-4"
           >
-            Sign in
-          </Link>
-          <Link
-            href="/register"
-            className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-[#111126] transition hover:bg-violet-100"
-          >
-            Get started <span className="ml-1">↗</span>
-          </Link>
-        </div>
-      </header>
+            <div>
+              <label className="mb-2 block text-sm font-medium text-slate-300">
+                Full name
+              </label>
 
-      {/* Hero */}
-      <section className="relative mx-auto flex min-h-[680px] max-w-7xl items-center px-6 py-20 lg:px-10">
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute left-[10%] top-[20%] h-72 w-72 rounded-full bg-violet-600/15 blur-[110px]" />
-          <div className="absolute bottom-[5%] right-[10%] h-72 w-72 rounded-full bg-blue-500/15 blur-[110px]" />
-        </div>
+              <input
+                type="text"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Your full name"
+                required
+                minLength={2}
+                maxLength={100}
+                autoComplete="name"
+                className="w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3.5 text-sm text-white outline-none placeholder:text-slate-600 focus:border-violet-400 focus:ring-2 focus:ring-violet-500/20"
+              />
+            </div>
 
-        <div className="relative z-10 max-w-2xl">
-          <div className="hero-eyebrow mb-7 inline-flex items-center gap-2 rounded-full border border-violet-400/20 bg-violet-400/[0.08] px-4 py-2 text-xs font-medium tracking-wide text-violet-200">
-            <span className="h-2 w-2 rounded-full bg-violet-400 shadow-[0_0_12px_#a78bfa]" />
-            YOUR PERSONAL AI LEARNING SPACE
-          </div>
+            <div>
+              <label className="mb-2 block text-sm font-medium text-slate-300">
+                Email address
+              </label>
 
-          <h1 className="hero-title text-5xl font-semibold leading-[1.08] tracking-[-0.045em] sm:text-6xl lg:text-7xl">
-            Learn beyond
-            <br />
-            <span className="bg-gradient-to-r from-violet-300 via-blue-300 to-cyan-300 bg-clip-text text-transparent">
-              what you know.
-            </span>
-          </h1>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                required
+                autoComplete="email"
+                className="w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3.5 text-sm text-white outline-none placeholder:text-slate-600 focus:border-violet-400 focus:ring-2 focus:ring-violet-500/20"
+              />
+            </div>
 
-          <p className="hero-description mt-7 max-w-xl text-base leading-8 text-slate-400 sm:text-lg">
-            Meet your personal AI learning companion. Explore your
-            documents, understand complex ideas and turn knowledge
-            into something you truly remember.
-          </p>
+            <div>
+              <label className="mb-2 block text-sm font-medium text-slate-300">
+                Password
+              </label>
 
-          <div className="hero-actions mt-10 flex flex-wrap items-center gap-4">
-            <Link
-              href="/register"
-              className="group rounded-full bg-gradient-to-r from-violet-500 to-blue-500 px-7 py-4 text-sm font-semibold shadow-xl shadow-violet-600/20 transition duration-300 hover:-translate-y-1 hover:shadow-violet-500/40"
-            >
-              Start learning for free
-              <span className="ml-3 transition group-hover:translate-x-1">→</span>
-            </Link>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="At least 8 characters"
+                required
+                minLength={8}
+                maxLength={128}
+                autoComplete="new-password"
+                className="w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3.5 text-sm text-white outline-none placeholder:text-slate-600 focus:border-violet-400 focus:ring-2 focus:ring-violet-500/20"
+              />
+            </div>
 
-            <a
-              href="#features"
-              className="rounded-full border border-white/15 px-7 py-4 text-sm font-medium text-slate-300 transition hover:border-violet-300/50 hover:bg-white/5"
-            >
-              Explore features
-            </a>
-          </div>
+            <div>
+              <label className="mb-2 block text-sm font-medium text-slate-300">
+                Confirm password
+              </label>
 
-          <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-3 text-xs text-slate-500">
-            <span>✦ AI-powered learning</span>
-            <span>◈ Your own knowledge base</span>
-            <span>⌘ Learn at your pace</span>
-          </div>
-        </div>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Re-enter your password"
+                required
+                autoComplete="new-password"
+                className="w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3.5 text-sm text-white outline-none placeholder:text-slate-600 focus:border-violet-400 focus:ring-2 focus:ring-violet-500/20"
+              />
+            </div>
 
-        {/* 3D visual */}
-        <div className="pointer-events-none absolute inset-y-0 right-[-15%] hidden w-[70%] lg:block">
-          <Scene3D />
-        </div>
-      </section>
-
-      {/* Features */}
-      <section
-        id="features"
-        className="features-section relative mx-auto max-w-7xl px-6 py-28 lg:px-10"
-      >
-        <div className="mb-14 max-w-2xl">
-          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-violet-300">
-            Everything in one place
-          </p>
-          <h2 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-            A smarter way to
-            <span className="text-slate-500"> learn and grow.</span>
-          </h2>
-          <p className="mt-5 leading-7 text-slate-400">
-            Less searching. More understanding. Everything you need
-            to make your learning journey more effective.
-          </p>
-        </div>
-
-        <div className="grid gap-5 md:grid-cols-3">
-          {features.map((feature) => (
-            <article
-              key={feature.number}
-              className="feature-card group rounded-3xl border border-white/[0.09] bg-gradient-to-b from-white/[0.07] to-white/[0.02] p-8 transition duration-300 hover:-translate-y-2 hover:border-violet-400/30"
-            >
-              <div className="mb-10 flex items-center justify-between">
-                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-400/10 text-2xl text-violet-300">
-                  {feature.icon}
-                </span>
-                <span className="text-sm text-slate-600">
-                  {feature.number}
-                </span>
-              </div>
-
-              <h3 className="text-xl font-semibold">{feature.title}</h3>
-              <p className="mt-4 text-sm leading-7 text-slate-400">
-                {feature.description}
+            {error && (
+              <p
+                role="alert"
+                className="rounded-xl border border-red-400/20 bg-red-400/10 p-3 text-sm text-red-300"
+              >
+                {error}
               </p>
+            )}
 
-              <div className="mt-8 text-sm text-violet-300 transition group-hover:translate-x-1">
-                Discover more →
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-xl bg-gradient-to-r from-violet-500 to-blue-500 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:-translate-y-0.5 hover:shadow-violet-500/40 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {loading
+                ? "Sending verification code..."
+                : "Create your account →"}
+            </button>
+          </form>
 
-      {/* How it works */}
-      <section
-        id="how-it-works"
-        className="steps-section mx-auto max-w-7xl px-6 py-24 lg:px-10"
-      >
-        <div className="rounded-[32px] border border-white/[0.08] bg-gradient-to-br from-violet-500/[0.12] via-white/[0.025] to-blue-500/[0.08] p-8 sm:p-14">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-violet-300">
-            Your journey starts here
+          <p className="mt-6 text-center text-sm text-slate-400">
+            Already have an account?{" "}
+            <Link
+              href="/login"
+              className="font-semibold text-violet-300 hover:text-violet-200"
+            >
+              Sign in
+            </Link>
           </p>
+        </>
+      ) : (
+        <div className="space-y-6">
+          <div className="text-center">
+            <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border border-violet-400/20 bg-violet-500/10">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-violet-300"
+              >
+                <rect
+                  x="3"
+                  y="5"
+                  width="18"
+                  height="14"
+                  rx="2"
+                />
+                <path d="m3 7 9 6 9-6" />
+              </svg>
+            </div>
 
-          <h2 className="mt-5 max-w-2xl text-4xl font-semibold tracking-tight sm:text-5xl">
-            From information to
-            <span className="text-violet-300"> understanding.</span>
-          </h2>
+            <h2 className="text-xl font-semibold text-white">
+              Check your inbox
+            </h2>
 
-          <div className="mt-14 grid gap-10 md:grid-cols-3">
-            {[
-              ["01", "Bring your material", "Upload notes, PDFs and learning documents."],
-              ["02", "Explore with AI", "Ask questions and get answers grounded in your material."],
-              ["03", "Test your knowledge", "Generate quizzes and strengthen what you've learned."],
-            ].map(([number, title, description]) => (
-              <div key={number}>
-                <span className="text-sm font-semibold text-violet-300">
-                  {number}
-                </span>
-                <h3 className="mt-4 text-xl font-semibold">{title}</h3>
-                <p className="mt-3 text-sm leading-7 text-slate-400">
-                  {description}
-                </p>
-              </div>
-            ))}
+            <p className="mt-2 text-sm leading-6 text-slate-400">
+              We've sent a six-digit verification code to
+            </p>
+
+            <p className="mt-1 break-all font-medium text-violet-300">
+              {email}
+            </p>
           </div>
+
+          <form
+            onSubmit={handleVerify}
+            className="space-y-5"
+          >
+            <div>
+              <label
+                htmlFor="otp"
+                className="mb-3 block text-center text-sm font-medium text-slate-300"
+              >
+                Enter your verification code
+              </label>
+
+              <input
+                id="otp"
+                type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                value={otp}
+                onChange={(e) =>
+                  setOtp(
+                    e.target.value
+                      .replace(/\D/g, "")
+                      .slice(0, 6),
+                  )
+                }
+                placeholder="000000"
+                maxLength={6}
+                required
+                autoFocus
+                className="w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-4 text-center font-mono text-3xl font-bold tracking-[0.5em] text-white outline-none placeholder:text-slate-600 focus:border-violet-400 focus:ring-2 focus:ring-violet-500/20"
+              />
+            </div>
+
+            {error && (
+              <p
+                role="alert"
+                className="rounded-xl border border-red-400/20 bg-red-400/10 p-3 text-sm text-red-300"
+              >
+                {error}
+              </p>
+            )}
+
+            {success && (
+              <p
+                role="status"
+                className="rounded-xl border border-emerald-400/20 bg-emerald-400/10 p-3 text-sm text-emerald-300"
+              >
+                {success}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading || otp.length !== 6}
+              className="w-full rounded-xl bg-gradient-to-r from-violet-500 to-blue-500 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:-translate-y-0.5 hover:shadow-violet-500/40 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {loading
+                ? "Verifying..."
+                : "Verify email and continue →"}
+            </button>
+          </form>
+
+          <div className="text-center">
+            <p className="text-sm text-slate-400">
+              Didn't receive the code?
+            </p>
+
+            <button
+              type="button"
+              onClick={handleResendOTP}
+              disabled={loading || cooldown > 0}
+              className="mt-2 text-sm font-semibold text-violet-300 transition hover:text-violet-200 disabled:cursor-not-allowed disabled:text-slate-500"
+            >
+              {cooldown > 0
+                ? `Resend code in ${cooldown}s`
+                : "Resend verification code"}
+            </button>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleChangeEmail}
+            disabled={loading}
+            className="w-full text-center text-sm text-slate-400 transition hover:text-white disabled:opacity-50"
+          >
+            ← Change email address
+          </button>
+
+          <p className="text-center text-xs leading-5 text-slate-500">
+            Your verification code expires in 5 minutes.
+            Check your spam folder if you can't find the email.
+          </p>
         </div>
-      </section>
-
-      {/* CTA */}
-      <section
-        id="about"
-        className="final-cta mx-auto max-w-7xl px-6 py-28 text-center"
-      >
-        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-violet-300">
-          Make knowledge yours
-        </p>
-        <h2 className="mx-auto mt-5 max-w-3xl text-4xl font-semibold tracking-tight sm:text-6xl">
-          Your next learning journey starts here.
-        </h2>
-        <p className="mx-auto mt-6 max-w-xl leading-7 text-slate-400">
-          Create your account and discover a more personal way to learn.
-        </p>
-
-        <Link
-          href="/register"
-          className="mt-9 inline-flex rounded-full bg-white px-8 py-4 text-sm font-semibold text-[#111126] transition hover:-translate-y-1 hover:bg-violet-100"
-        >
-          Get started with LearnWise →
-        </Link>
-      </section>
-
-      {/* Footer */}
-      <footer className="border-t border-white/[0.08] px-6 py-8">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 text-sm text-slate-500 sm:flex-row">
-          <span className="font-semibold text-slate-300">✦ LearnWise</span>
-          <span>Learn something extraordinary.</span>
-          <span>Built for curious minds.</span>
-        </div>
-      </footer>
-    </main>
+      )}
+    </AuthLayout>
   );
 }

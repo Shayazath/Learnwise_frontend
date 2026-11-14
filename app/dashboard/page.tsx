@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -14,7 +13,9 @@ import { DashboardLoader } from "@/components/layout/DashboardLoader";
 
 import { useLearnWise } from "@/hooks/useLearnWise";
 import { useAuth } from "@/app/providers/AuthProvider";
-
+import { ProfileView } from "@/components/profile/ProfileView";
+import { AccountSettingsView } from "@/components/profile/AccountSettingsView";
+import type { ViewName } from "@/types";
 export default function HomePage() {
   // ------------------------------------
   // Refs and state
@@ -25,8 +26,7 @@ export default function HomePage() {
   const previousMessageCount = useRef(0);
 
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [minimumLoadingComplete, setMinimumLoadingComplete] =
-    useState(false);
+  const [minimumLoadingComplete, setMinimumLoadingComplete] = useState(false);
 
   const router = useRouter();
 
@@ -288,7 +288,7 @@ export default function HomePage() {
   // Navigation handlers
   // ------------------------------------
 
-  const navigate = (nextView: "tutor" | "library" | "quiz") => {
+  const navigate = (nextView: ViewName) => {
     learnWise.navigate(nextView);
     setMobileOpen(false);
   };
@@ -333,9 +333,7 @@ export default function HomePage() {
           view={learnWise.view}
           theme={learnWise.theme}
           onToggleTheme={learnWise.toggleTheme}
-          onToggleMobileMenu={() =>
-            setMobileOpen((current) => !current)
-          }
+          onToggleMobileMenu={() => setMobileOpen((current) => !current)}
         />
 
         {/* AI Tutor */}
@@ -386,6 +384,12 @@ export default function HomePage() {
           />
         )}
 
+        {/* My Profile */}
+        {learnWise.view === "profile" && <ProfileView />}
+
+        {/* Account Settings */}
+        {learnWise.view === "settings" && <AccountSettingsView />}
+
         {/* Footer */}
         <footer className="app-footer">
           <span>
@@ -393,8 +397,7 @@ export default function HomePage() {
           </span>
 
           <span>
-            Built for curious minds{" "}
-            <span className="footer-heart">♥</span>
+            Built for curious minds <span className="footer-heart">♥</span>
           </span>
         </footer>
       </main>

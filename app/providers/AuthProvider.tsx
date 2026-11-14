@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -13,33 +14,46 @@ import {
   getCurrentUser,
   loginUser,
   registerUser,
+  verifyEmail,
   logoutUser,
 } from "@/lib/auth.service";
 
-import type { User, LoginRequest, RegisterRequest } from "@/types";
+import type {
+  User,
+  LoginRequest,
+  RegisterRequest,
+  RegistrationResponse,
+  VerifyEmailResponse,
+} from "@/types";
+
 
 type AuthContextType = {
   user: User | null;
   loading: boolean;
   isAuthenticated: boolean;
   login: (payload: LoginRequest) => Promise<void>;
-  register: (payload: RegisterRequest) => Promise<void>;
+  register: (payload: RegisterRequest) => Promise<RegistrationResponse>;
+  verifyRegistrationEmail: (
+    email: string,
+    otp: string,
+  ) => Promise<void>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
   updateUser: (user: User) => void;
 };
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | undefined>(
+  undefined,
+);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const updateUser = useCallback((updatedUser: User) => {
-    setUser(updatedUser);
-  }, []);
-
-  // Restore authenticated user
   const refreshUser = useCallback(async () => {
     try {
       const currentUser = await getCurrentUser();
@@ -50,7 +64,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Initialize authentication on application startup
+  const updateUser = useCallback((updatedUser: User) => {
+    setUser(updatedUser);
+  }, []);
+
   useEffect(() => {
     let active = true;
 
@@ -79,19 +96,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  // Login
   const login = async (payload: LoginRequest) => {
     const response = await loginUser(payload);
     setUser(response.user);
   };
 
-  // Register
-  const register = async (payload: RegisterRequest) => {
-    const response = await registerUser(payload);
+  const register = async (
+    payload: RegisterRequest,
+  ): Promise<RegistrationResponse> => {
+    return await registerUser(payload);
+  };
+
+  const verifyRegistrationEmail = async (
+    email: string,
+    otp: string,
+  ) => {
+    const response: VerifyEmailResponse = await verifyEmail({
+      email,
+      otp,
+    });
+
     setUser(response.user);
   };
 
-  // Logout
   const logout = async () => {
     await logoutUser();
     setUser(null);
@@ -105,6 +132,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isAuthenticated: !!user,
         login,
         register,
+        verifyRegistrationEmail,
         logout,
         refreshUser,
         updateUser,
@@ -119,7 +147,9 @@ export function useAuth() {
   const context = useContext(AuthContext);
 
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error(
+      "useAuth must be used within an AuthProvider",
+    );
   }
 
   return context;
