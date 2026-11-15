@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60, // Replace with your actual JWT expiry
+      maxAge: data.expires_in,
     });
 
     return result;

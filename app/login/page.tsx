@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -12,12 +13,13 @@ import AuthLayout from "@/app/components/landing/AuthLayout";
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
-  const [checkingAuth, setCheckingAuth] = useState(true);
 
+  const [checkingAuth, setCheckingAuth] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,7 +27,12 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      await login({ email, password });
+      await login({
+        email,
+        password,
+        rememberMe,
+      });
+
       router.replace("/dashboard");
     } catch (err) {
       const axiosError = err as AxiosError<{ detail?: string }>;
@@ -38,7 +45,8 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
-    useEffect(() => {
+
+  useEffect(() => {
     let active = true;
 
     const checkAuth = async () => {
@@ -78,6 +86,7 @@ export default function LoginPage() {
           <label className="mb-2 block text-sm font-medium text-slate-300">
             Email address
           </label>
+
           <input
             type="email"
             value={email}
@@ -112,6 +121,46 @@ export default function LoginPage() {
             autoComplete="current-password"
             className="w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3.5 text-sm text-white outline-none placeholder:text-slate-600 transition focus:border-violet-400 focus:ring-2 focus:ring-violet-500/20"
           />
+
+          {/* Remember me */}
+          <div className="mt-4 flex items-center justify-between gap-3">
+            <label
+              htmlFor="remember-me"
+              className="group flex cursor-pointer select-none items-center gap-2.5"
+            >
+              <span className="relative flex h-5 w-5 shrink-0 items-center justify-center">
+                <input
+                  id="remember-me"
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="peer absolute inset-0 h-full w-full cursor-pointer appearance-none rounded-md border border-white/20 bg-white/[0.04] transition-all checked:border-violet-500 checked:bg-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:ring-offset-2 focus:ring-offset-[#090812]"
+                />
+
+                <svg
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  className="pointer-events-none relative z-10 h-3.5 w-3.5 scale-75 text-white opacity-0 transition-all peer-checked:scale-100 peer-checked:opacity-100"
+                >
+                  <path
+                    d="M4.5 10.5L8 14L15.5 6.5"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+
+              <span className="text-sm font-medium text-slate-300 transition-colors group-hover:text-white">
+                Remember me
+              </span>
+            </label>
+
+            <span className="text-right text-[11px] text-slate-500 transition-colors">
+              {rememberMe ? "30-day access" : "Standard session"}
+            </span>
+          </div>
         </div>
 
         {error && (
