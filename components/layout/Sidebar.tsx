@@ -67,97 +67,105 @@ export function Sidebar({
     }
   };
 
+  const handleNavigate = (nextView: ViewName) => {
+    setProfileOpen(false);
+    onNavigate(nextView);
+  };
+
   return (
     <aside
-      className={`sidebar flex h-[100dvh] min-h-0 flex-col overflow-hidden ${
+      className={`sidebar h-[100dvh] min-h-0 overflow-x-hidden overflow-y-auto overscroll-contain [scrollbar-width:none] [-webkit-overflow-scrolling:touch] ${
         mobileOpen ? "open" : ""
       }`}
     >
-      {/* Scrollable sidebar content */}
-      <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain [scrollbar-width:thin] [-webkit-overflow-scrolling:touch]">
+      {/* Brand */}
+      <a
+        className="brand"
+        href="/dashboard"
+        onClick={(event) => {
+          event.preventDefault();
+          handleNavigate("tutor");
+        }}
+      >
+        <span className="brand-icon">L</span>
+        <span className="brand-name">LearnYah</span>
+      </a>
 
-        {/* Brand */}
-        <a
-          className="brand"
-          href="/dashboard"
-          onClick={(event) => {
-            event.preventDefault();
-            onNavigate("tutor");
-          }}
+      {/* New conversation */}
+      <button
+        className="new-chat"
+        onClick={onNewChat}
+      >
+        <MessageSquarePlus size={16} />
+        New conversation
+      </button>
+
+      {/* Workspace navigation */}
+      <p className="nav-label">WORKSPACE</p>
+
+      <nav
+        className="nav-list"
+        aria-label="Main navigation"
+      >
+        <button
+          className={`nav-item ${view === "tutor" ? "active" : ""}`}
+          onClick={() => handleNavigate("tutor")}
         >
-          <span className="brand-icon">L</span>
-          <span className="brand-name">LearnYah</span>
-        </a>
-
-        {/* New conversation */}
-        <button className="new-chat" onClick={onNewChat}>
-          <MessageSquarePlus size={16} />
-          New conversation
+          <Sparkles size={17} />
+          AI Tutor
         </button>
 
-        {/* Workspace navigation */}
-        <p className="nav-label">WORKSPACE</p>
+        <button
+          className={`nav-item ${view === "library" ? "active" : ""}`}
+          onClick={() => handleNavigate("library")}
+        >
+          <Library size={17} />
+          My Library
+          <span className="nav-count">{documents.length}</span>
+        </button>
 
-        <nav className="nav-list" aria-label="Main navigation">
-          <button
-            className={`nav-item ${view === "tutor" ? "active" : ""}`}
-            onClick={() => onNavigate("tutor")}
-          >
-            <Sparkles size={17} />
-            AI Tutor
-          </button>
+        <button
+          className={`nav-item ${view === "quiz" ? "active" : ""}`}
+          onClick={() => handleNavigate("quiz")}
+        >
+          <BookMarked size={17} />
+          Practice Quiz
+        </button>
+      </nav>
 
-          <button
-            className={`nav-item ${view === "library" ? "active" : ""}`}
-            onClick={() => onNavigate("library")}
-          >
-            <Library size={17} />
-            My Library
-            <span className="nav-count">{documents.length}</span>
-          </button>
+      <div className="sidebar-divider" />
 
-          <button
-            className={`nav-item ${view === "quiz" ? "active" : ""}`}
-            onClick={() => onNavigate("quiz")}
-          >
-            <BookMarked size={17} />
-            Practice Quiz
-          </button>
-        </nav>
+      {/* Documents */}
+      <div className="library-heading">
+        <span className="nav-label">YOUR MATERIALS</span>
 
-        <div className="sidebar-divider" />
-
-        {/* Documents */}
-        <div className="library-heading">
-          <span className="nav-label">YOUR MATERIALS</span>
-
-          <button
-            title="Upload a document"
-            aria-label="Open document library to upload"
-            onClick={() => onNavigate("library")}
-          >
-            <Plus size={16} />
-          </button>
-        </div>
-
-        <ul className="sidebar-docs">
-          {documents.length ? (
-            documents.map((doc) => (
-              <li key={doc.id} title={doc.filename}>
-                {doc.filename}
-              </li>
-            ))
-          ) : (
-            <li className="empty-docs">
-              Your learning materials will appear here.
-            </li>
-          )}
-        </ul>
+        <button
+          title="Upload a document"
+          aria-label="Open document library to upload"
+          onClick={() => handleNavigate("library")}
+        >
+          <Plus size={16} />
+        </button>
       </div>
 
-      {/* Fixed sidebar bottom */}
-      <div className="sidebar-bottom relative z-10 shrink-0 pb-[max(12px,env(safe-area-inset-bottom))]">
+      <ul className="sidebar-docs">
+        {documents.length ? (
+          documents.map((doc) => (
+            <li key={doc.id} title={doc.filename}>
+              {doc.filename}
+            </li>
+          ))
+        ) : (
+          <li className="empty-docs">
+            Your learning materials will appear here.
+          </li>
+        )}
+      </ul>
 
+      {/* Sidebar bottom */}
+      <div className="sidebar-bottom pb-[max(20px,env(safe-area-inset-bottom))]">
+
+        {/* Workspace status */}
         <div className="local-status">
           <span className="status-dot" />
 
@@ -184,10 +192,7 @@ export function Sidebar({
               </div>
 
               <button
-                onClick={() => {
-                  setProfileOpen(false);
-                  onNavigate("profile");
-                }}
+                onClick={() => handleNavigate("profile")}
                 className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm text-white/75 transition hover:bg-white/[0.07] hover:text-white"
               >
                 <UserRound size={16} />
@@ -195,10 +200,7 @@ export function Sidebar({
               </button>
 
               <button
-                onClick={() => {
-                  setProfileOpen(false);
-                  onNavigate("settings");
-                }}
+                onClick={() => handleNavigate("settings")}
                 className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm text-white/75 transition hover:bg-white/[0.07] hover:text-white"
               >
                 <Settings size={16} />
@@ -226,6 +228,7 @@ export function Sidebar({
             </div>
           )}
 
+          {/* Logout error */}
           {logoutError && (
             <p
               role="alert"
@@ -235,6 +238,7 @@ export function Sidebar({
             </p>
           )}
 
+          {/* Profile button */}
           <button
             type="button"
             onClick={() => setProfileOpen((current) => !current)}
