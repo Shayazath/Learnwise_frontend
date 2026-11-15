@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -67,87 +68,96 @@ export function Sidebar({
   };
 
   return (
-    <aside className={`sidebar ${mobileOpen ? "open" : ""}`}>
-      {/* Brand */}
-      <a
-        className="brand"
-        href="/dashboard"
-        onClick={(event) => {
-          event.preventDefault();
-          onNavigate("tutor");
-        }}
-      >
-        <span className="brand-icon">L</span>
-        <span className="brand-name">LearnYah</span>
-      </a>
+    <aside
+      className={`sidebar flex h-[100dvh] min-h-0 flex-col overflow-hidden ${
+        mobileOpen ? "open" : ""
+      }`}
+    >
+      {/* Scrollable sidebar content */}
+      <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain [scrollbar-width:thin] [-webkit-overflow-scrolling:touch]">
 
-      {/* New conversation */}
-      <button className="new-chat" onClick={onNewChat}>
-        <MessageSquarePlus size={16} />
-        New conversation
-      </button>
-
-      {/* Workspace navigation */}
-      <p className="nav-label">WORKSPACE</p>
-
-      <nav className="nav-list" aria-label="Main navigation">
-        <button
-          className={`nav-item ${view === "tutor" ? "active" : ""}`}
-          onClick={() => onNavigate("tutor")}
+        {/* Brand */}
+        <a
+          className="brand"
+          href="/dashboard"
+          onClick={(event) => {
+            event.preventDefault();
+            onNavigate("tutor");
+          }}
         >
-          <Sparkles size={17} />
-          AI Tutor
+          <span className="brand-icon">L</span>
+          <span className="brand-name">LearnYah</span>
+        </a>
+
+        {/* New conversation */}
+        <button className="new-chat" onClick={onNewChat}>
+          <MessageSquarePlus size={16} />
+          New conversation
         </button>
 
-        <button
-          className={`nav-item ${view === "library" ? "active" : ""}`}
-          onClick={() => onNavigate("library")}
-        >
-          <Library size={17} />
-          My Library
-          <span className="nav-count">{documents.length}</span>
-        </button>
+        {/* Workspace navigation */}
+        <p className="nav-label">WORKSPACE</p>
 
-        <button
-          className={`nav-item ${view === "quiz" ? "active" : ""}`}
-          onClick={() => onNavigate("quiz")}
-        >
-          <BookMarked size={17} />
-          Practice Quiz
-        </button>
-      </nav>
+        <nav className="nav-list" aria-label="Main navigation">
+          <button
+            className={`nav-item ${view === "tutor" ? "active" : ""}`}
+            onClick={() => onNavigate("tutor")}
+          >
+            <Sparkles size={17} />
+            AI Tutor
+          </button>
 
-      <div className="sidebar-divider" />
+          <button
+            className={`nav-item ${view === "library" ? "active" : ""}`}
+            onClick={() => onNavigate("library")}
+          >
+            <Library size={17} />
+            My Library
+            <span className="nav-count">{documents.length}</span>
+          </button>
 
-      {/* Documents */}
-      <div className="library-heading">
-        <span className="nav-label">YOUR MATERIALS</span>
+          <button
+            className={`nav-item ${view === "quiz" ? "active" : ""}`}
+            onClick={() => onNavigate("quiz")}
+          >
+            <BookMarked size={17} />
+            Practice Quiz
+          </button>
+        </nav>
 
-        <button
-          title="Upload a document"
-          aria-label="Open document library to upload"
-          onClick={() => onNavigate("library")}
-        >
-          <Plus size={16} />
-        </button>
+        <div className="sidebar-divider" />
+
+        {/* Documents */}
+        <div className="library-heading">
+          <span className="nav-label">YOUR MATERIALS</span>
+
+          <button
+            title="Upload a document"
+            aria-label="Open document library to upload"
+            onClick={() => onNavigate("library")}
+          >
+            <Plus size={16} />
+          </button>
+        </div>
+
+        <ul className="sidebar-docs">
+          {documents.length ? (
+            documents.map((doc) => (
+              <li key={doc.id} title={doc.filename}>
+                {doc.filename}
+              </li>
+            ))
+          ) : (
+            <li className="empty-docs">
+              Your learning materials will appear here.
+            </li>
+          )}
+        </ul>
       </div>
 
-      <ul className="sidebar-docs">
-        {documents.length ? (
-          documents.map((doc) => (
-            <li key={doc.id} title={doc.filename}>
-              {doc.filename}
-            </li>
-          ))
-        ) : (
-          <li className="empty-docs">
-            Your learning materials will appear here.
-          </li>
-        )}
-      </ul>
+      {/* Fixed sidebar bottom */}
+      <div className="sidebar-bottom relative z-10 shrink-0 pb-[max(12px,env(safe-area-inset-bottom))]">
 
-      {/* Sidebar bottom */}
-      <div className="sidebar-bottom">
         <div className="local-status">
           <span className="status-dot" />
 
@@ -159,13 +169,18 @@ export function Sidebar({
 
         {/* Account menu */}
         <div className="relative mt-3">
+
           {profileOpen && (
             <div className="profile-dropdown absolute bottom-full left-0 z-50 mb-3 w-full overflow-hidden rounded-2xl border p-2 shadow-2xl">
+
               <div className="border-b border-white/10 px-3 py-3">
                 <p className="profile-name truncate text-sm font-semibold">
                   {fullName}
                 </p>
-                <p className="profile-email mt-1 truncate text-xs">{email}</p>
+
+                <p className="profile-email mt-1 truncate text-xs">
+                  {email}
+                </p>
               </div>
 
               <button
@@ -198,7 +213,10 @@ export function Sidebar({
                 className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm text-red-300 transition hover:bg-red-400/10 disabled:opacity-50"
               >
                 {loggingOut ? (
-                  <LoaderCircle size={16} className="animate-spin" />
+                  <LoaderCircle
+                    size={16}
+                    className="animate-spin"
+                  />
                 ) : (
                   <LogOut size={16} />
                 )}
@@ -232,6 +250,7 @@ export function Sidebar({
               <strong className="profile-name block truncate text-xs">
                 {fullName}
               </strong>
+
               <small className="profile-email mt-1 block truncate text-[10px]">
                 {email || "Personal workspace"}
               </small>
