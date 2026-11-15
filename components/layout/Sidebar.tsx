@@ -74,199 +74,195 @@ export function Sidebar({
 
   return (
     <aside
-      className={`sidebar h-[100dvh] min-h-0 overflow-x-hidden overflow-y-auto overscroll-contain [scrollbar-width:none] [-webkit-overflow-scrolling:touch] ${
+      className={`sidebar !h-[100dvh] !min-h-0 !overflow-x-hidden !overflow-y-auto overscroll-y-contain [scrollbar-width:none] [-webkit-overflow-scrolling:touch] ${
         mobileOpen ? "open" : ""
       }`}
     >
-      {/* Brand */}
-      <a
-        className="brand"
-        href="/dashboard"
-        onClick={(event) => {
-          event.preventDefault();
-          handleNavigate("tutor");
-        }}
-      >
-        <span className="brand-icon">L</span>
-        <span className="brand-name">LearnYah</span>
-      </a>
+      {/* Sidebar content */}
+      <div className="flex min-h-full flex-col">
 
-      {/* New conversation */}
-      <button
-        className="new-chat"
-        onClick={onNewChat}
-      >
-        <MessageSquarePlus size={16} />
-        New conversation
-      </button>
-
-      {/* Workspace navigation */}
-      <p className="nav-label">WORKSPACE</p>
-
-      <nav
-        className="nav-list"
-        aria-label="Main navigation"
-      >
-        <button
-          className={`nav-item ${view === "tutor" ? "active" : ""}`}
-          onClick={() => handleNavigate("tutor")}
+        {/* Brand */}
+        <a
+          className="brand"
+          href="/dashboard"
+          onClick={(event) => {
+            event.preventDefault();
+            handleNavigate("tutor");
+          }}
         >
-          <Sparkles size={17} />
-          AI Tutor
+          <span className="brand-icon">L</span>
+          <span className="brand-name">LearnYah</span>
+        </a>
+
+        {/* New conversation */}
+        <button
+          className="new-chat"
+          onClick={onNewChat}
+        >
+          <MessageSquarePlus size={16} />
+          New conversation
         </button>
 
-        <button
-          className={`nav-item ${view === "library" ? "active" : ""}`}
-          onClick={() => handleNavigate("library")}
-        >
-          <Library size={17} />
-          My Library
-          <span className="nav-count">{documents.length}</span>
-        </button>
+        {/* Workspace */}
+        <p className="nav-label">WORKSPACE</p>
 
-        <button
-          className={`nav-item ${view === "quiz" ? "active" : ""}`}
-          onClick={() => handleNavigate("quiz")}
-        >
-          <BookMarked size={17} />
-          Practice Quiz
-        </button>
-      </nav>
+        <nav className="nav-list" aria-label="Main navigation">
+          <button
+            className={`nav-item ${view === "tutor" ? "active" : ""}`}
+            onClick={() => handleNavigate("tutor")}
+          >
+            <Sparkles size={17} />
+            AI Tutor
+          </button>
 
-      <div className="sidebar-divider" />
+          <button
+            className={`nav-item ${view === "library" ? "active" : ""}`}
+            onClick={() => handleNavigate("library")}
+          >
+            <Library size={17} />
+            My Library
+            <span className="nav-count">{documents.length}</span>
+          </button>
 
-      {/* Documents */}
-      <div className="library-heading">
-        <span className="nav-label">YOUR MATERIALS</span>
+          <button
+            className={`nav-item ${view === "quiz" ? "active" : ""}`}
+            onClick={() => handleNavigate("quiz")}
+          >
+            <BookMarked size={17} />
+            Practice Quiz
+          </button>
+        </nav>
 
-        <button
-          title="Upload a document"
-          aria-label="Open document library to upload"
-          onClick={() => handleNavigate("library")}
-        >
-          <Plus size={16} />
-        </button>
-      </div>
+        <div className="sidebar-divider" />
 
-      <ul className="sidebar-docs">
-        {documents.length ? (
-          documents.map((doc) => (
-            <li key={doc.id} title={doc.filename}>
-              {doc.filename}
-            </li>
-          ))
-        ) : (
-          <li className="empty-docs">
-            Your learning materials will appear here.
-          </li>
-        )}
-      </ul>
+        {/* Documents */}
+        <div className="library-heading">
+          <span className="nav-label">YOUR MATERIALS</span>
 
-      {/* Sidebar bottom */}
-      <div className="sidebar-bottom pb-[max(20px,env(safe-area-inset-bottom))]">
-
-        {/* Workspace status */}
-        <div className="local-status">
-          <span className="status-dot" />
-
-          <span>
-            <strong>Learning workspace</strong>
-            <small>Your personal AI study space</small>
-          </span>
+          <button
+            title="Upload a document"
+            aria-label="Open document library to upload"
+            onClick={() => handleNavigate("library")}
+          >
+            <Plus size={16} />
+          </button>
         </div>
 
-        {/* Account menu */}
-        <div className="relative mt-3">
+        <ul className="sidebar-docs">
+          {documents.length ? (
+            documents.map((doc) => (
+              <li key={doc.id} title={doc.filename}>
+                {doc.filename}
+              </li>
+            ))
+          ) : (
+            <li className="empty-docs">
+              Your learning materials will appear here.
+            </li>
+          )}
+        </ul>
 
-          {profileOpen && (
-            <div className="profile-dropdown absolute bottom-full left-0 z-50 mb-3 w-full overflow-hidden rounded-2xl border p-2 shadow-2xl">
+        {/* Account section */}
+        <div className="sidebar-bottom mt-auto !relative !bottom-auto !shrink-0 pb-[max(20px,env(safe-area-inset-bottom))]">
 
-              <div className="border-b border-white/10 px-3 py-3">
-                <p className="profile-name truncate text-sm font-semibold">
-                  {fullName}
-                </p>
+          {/* Workspace status - desktop only */}
+          <div className="local-status hidden sm:flex">
+            <span className="status-dot" />
 
-                <p className="profile-email mt-1 truncate text-xs">
-                  {email}
-                </p>
+            <span>
+              <strong>Learning workspace</strong>
+              <small>Your personal AI study space</small>
+            </span>
+          </div>
+
+          {/* Profile */}
+          <div className="relative mt-3">
+
+            {profileOpen && (
+              <div className="profile-dropdown absolute bottom-full left-0 z-50 mb-3 w-full overflow-hidden rounded-2xl border p-2 shadow-2xl">
+
+                <div className="border-b border-white/10 px-3 py-3">
+                  <p className="profile-name truncate text-sm font-semibold">
+                    {fullName}
+                  </p>
+
+                  <p className="profile-email mt-1 truncate text-xs">
+                    {email}
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => handleNavigate("profile")}
+                  className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm text-white/75 transition hover:bg-white/[0.07] hover:text-white"
+                >
+                  <UserRound size={16} />
+                  My Profile
+                </button>
+
+                <button
+                  onClick={() => handleNavigate("settings")}
+                  className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm text-white/75 transition hover:bg-white/[0.07] hover:text-white"
+                >
+                  <Settings size={16} />
+                  Account Settings
+                </button>
+
+                <div className="my-1 border-t border-white/10" />
+
+                <button
+                  onClick={handleLogout}
+                  disabled={loggingOut}
+                  className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm text-red-300 transition hover:bg-red-400/10 disabled:opacity-50"
+                >
+                  {loggingOut ? (
+                    <LoaderCircle size={16} className="animate-spin" />
+                  ) : (
+                    <LogOut size={16} />
+                  )}
+
+                  {loggingOut ? "Signing out..." : "Sign out"}
+                </button>
+              </div>
+            )}
+
+            {logoutError && (
+              <p
+                role="alert"
+                className="mb-2 rounded-lg bg-red-500/10 p-2 text-xs text-red-400"
+              >
+                {logoutError}
+              </p>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setProfileOpen((current) => !current)}
+              aria-expanded={profileOpen}
+              aria-label="Open account menu"
+              className="flex w-full items-center gap-3 rounded-xl border border-transparent p-2 text-left transition hover:border-white/10 hover:bg-white/[0.05]"
+            >
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-400 to-blue-500 text-sm font-bold text-white shadow-lg shadow-violet-500/20">
+                {initials || "L"}
               </div>
 
-              <button
-                onClick={() => handleNavigate("profile")}
-                className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm text-white/75 transition hover:bg-white/[0.07] hover:text-white"
-              >
-                <UserRound size={16} />
-                My Profile
-              </button>
+              <span className="min-w-0 flex-1">
+                <strong className="profile-name block truncate text-xs">
+                  {fullName}
+                </strong>
 
-              <button
-                onClick={() => handleNavigate("settings")}
-                className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm text-white/75 transition hover:bg-white/[0.07] hover:text-white"
-              >
-                <Settings size={16} />
-                Account Settings
-              </button>
+                <small className="profile-email mt-1 block truncate text-[10px]">
+                  {email || "Personal workspace"}
+                </small>
+              </span>
 
-              <div className="my-1 border-t border-white/10" />
-
-              <button
-                onClick={handleLogout}
-                disabled={loggingOut}
-                className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm text-red-300 transition hover:bg-red-400/10 disabled:opacity-50"
-              >
-                {loggingOut ? (
-                  <LoaderCircle
-                    size={16}
-                    className="animate-spin"
-                  />
-                ) : (
-                  <LogOut size={16} />
-                )}
-
-                {loggingOut ? "Signing out..." : "Sign out"}
-              </button>
-            </div>
-          )}
-
-          {/* Logout error */}
-          {logoutError && (
-            <p
-              role="alert"
-              className="mb-2 rounded-lg bg-red-500/10 p-2 text-xs text-red-400"
-            >
-              {logoutError}
-            </p>
-          )}
-
-          {/* Profile button */}
-          <button
-            type="button"
-            onClick={() => setProfileOpen((current) => !current)}
-            aria-expanded={profileOpen}
-            aria-label="Open account menu"
-            className="flex w-full items-center gap-3 rounded-xl border border-transparent p-2 text-left transition hover:border-white/10 hover:bg-white/[0.05]"
-          >
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-400 to-blue-500 text-sm font-bold text-white shadow-lg shadow-violet-500/20">
-              {initials || "L"}
-            </div>
-
-            <span className="min-w-0 flex-1">
-              <strong className="profile-name block truncate text-xs">
-                {fullName}
-              </strong>
-
-              <small className="profile-email mt-1 block truncate text-[10px]">
-                {email || "Personal workspace"}
-              </small>
-            </span>
-
-            <ChevronUp
-              size={16}
-              className={`shrink-0 text-white/50 transition-transform ${
-                profileOpen ? "" : "rotate-180"
-              }`}
-            />
-          </button>
+              <ChevronUp
+                size={16}
+                className={`shrink-0 text-white/50 transition-transform ${
+                  profileOpen ? "" : "rotate-180"
+                }`}
+              />
+            </button>
+          </div>
         </div>
       </div>
     </aside>
