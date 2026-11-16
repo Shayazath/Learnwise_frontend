@@ -3,7 +3,11 @@ import type { Metadata } from "next";
 import { AuthProvider } from "@/app/providers/AuthProvider";
 import "./globals.css";
 
+const siteUrl = "https://learnyah-frontend.vercel.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
+
   applicationName: "LearnYah",
 
   title: {
@@ -26,15 +30,15 @@ export const metadata: Metadata = {
     "AI study platform",
   ],
 
-  metadataBase: new URL(
-    "https://learnyah-frontend.vercel.app"
-  ),
+  alternates: {
+    canonical: "/",
+  },
 
   openGraph: {
-    title: "LearnYah – Learn in Your Own Way",
+    title: "LearnYah – Your Personal AI Learning Assistant",
     description:
       "Your personal AI tutor to understand concepts, explore study materials and improve your learning.",
-    url: "https://learnyah-frontend.vercel.app",
+    url: siteUrl,
     siteName: "LearnYah",
     locale: "en_US",
     type: "website",
@@ -50,10 +54,14 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+    },
   },
 
-  // If using Google HTML meta-tag verification,
-  // add the actual content token here.
+  // Keep your actual Google verification token here if using meta verification.
   // verification: {
   //   google: "YOUR_ACTUAL_VERIFICATION_TOKEN",
   // },
@@ -62,14 +70,39 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "LearnYah",
+    alternateName: ["Learn Yah"],
+    url: `${siteUrl}/`,
+  };
+
   return (
     <html lang="en">
       <head>
+        {/* Font connections */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
+        />
+
+        {/* LearnYah favicon */}
+        <link
+          rel="icon"
+          href="/icon.png"
+          type="image/png"
+          sizes="512x512"
+        />
+
+        {/* Google Website Name structured data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteSchema),
+          }}
         />
       </head>
 

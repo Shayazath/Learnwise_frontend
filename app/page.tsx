@@ -546,7 +546,7 @@ export default function LandingPage() {
           </p>
           <h2 className="mt-5 text-4xl font-black tracking-tight sm:text-6xl">
             Everything you need to
-            <span className="gradient-text"> learn smarter.</span>
+            <span className="gradient-text"> learnYah smarter.</span>
           </h2>
           <p className="mt-6 max-w-2xl leading-8 text-white/50">
             Your learning materials shouldn't just sit in folders. LearnYah
