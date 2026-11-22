@@ -5,50 +5,58 @@ import "./globals.css";
 
 const siteUrl = "https://learnyah-frontend.vercel.app";
 
+const siteName = "LearnYah";
+
+const siteTitle =
+  "LearnYah | Your Personal AI Learning Assistant";
+
+const siteDescription =
+  "LearnYah is your personal AI learning assistant. Upload study materials, ask questions, understand complex concepts, and test your knowledge with AI-powered quizzes.";
+
+// SEO Metadata
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
 
-  applicationName: "LearnYah",
+  applicationName: siteName,
 
   title: {
-    default: "LearnYah – Your Personal AI Learning Assistant",
+    default: siteTitle,
     template: "%s | LearnYah",
   },
 
-  description:
-    "LearnYah is your personal AI learning assistant. Upload study materials, ask questions, understand complex concepts, and test your knowledge with AI-powered quizzes.",
+  description: siteDescription,
 
   keywords: [
     "LearnYah",
-    "AI learning assistant",
-    "AI study assistant",
-    "personal AI tutor",
-    "AI study tools",
-    "RAG learning assistant",
-    "AI quiz generator",
-    "PDF AI tutor",
-    "AI study platform",
+    "Learn Yah",
+    "AI Learning Assistant",
+    "AI Study Assistant",
+    "Personal AI Tutor",
+    "AI Tutor",
+    "AI Education Platform",
+    "AI Study Tools",
+    "RAG Learning Assistant",
+    "AI Quiz Generator",
+    "PDF AI Tutor",
+    "AI Study Platform",
+    "AI Powered Learning",
+    "Document Question Answering",
+    "Personalized Learning",
+    "Generative AI Education",
   ],
+
+  authors: [
+    {
+      name: "LearnYah",
+      url: siteUrl,
+    },
+  ],
+
+  creator: "LearnYah",
+  publisher: "LearnYah",
 
   alternates: {
     canonical: "/",
-  },
-
-  openGraph: {
-    title: "LearnYah – Your Personal AI Learning Assistant",
-    description:
-      "Your personal AI tutor to understand concepts, explore study materials and improve your learning.",
-    url: siteUrl,
-    siteName: "LearnYah",
-    locale: "en_US",
-    type: "website",
-  },
-
-  twitter: {
-    card: "summary_large_image",
-    title: "LearnYah – Your Personal AI Learning Assistant",
-    description:
-      "Understand concepts, explore study materials and improve your learning with your personal AI tutor.",
   },
 
   robots: {
@@ -58,50 +66,127 @@ export const metadata: Metadata = {
       index: true,
       follow: true,
       "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
     },
   },
 
-  // Keep your actual Google verification token here if using meta verification.
+  icons: {
+    icon: [
+      {
+        url: "/icon.png",
+        type: "image/png",
+        sizes: "512x512",
+      },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: siteUrl,
+    siteName: siteName,
+    title: siteTitle,
+    description:
+      "Learn smarter with LearnYah, your personal AI tutor. Upload study materials, ask questions, explore concepts, and test your knowledge with AI-powered quizzes.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "LearnYah - Your Personal AI Learning Assistant",
+      },
+    ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+    images: ["/og-image.png"],
+  },
+
+  category: "education",
+
+  // Add your actual verification token if needed.
   // verification: {
-  //   google: "YOUR_ACTUAL_VERIFICATION_TOKEN",
+  //   google: "YOUR_GOOGLE_VERIFICATION_TOKEN",
   // },
 };
 
+// Google WebSite Schema
+const websiteSchema = {
+  "@type": "WebSite",
+  "@id": `${siteUrl}/#website`,
+  name: siteName,
+  alternateName: "Learn Yah",
+  url: `${siteUrl}/`,
+  description: siteDescription,
+  inLanguage: "en",
+};
+
+// Software Application Schema
+const softwareSchema = {
+  "@type": "SoftwareApplication",
+  "@id": `${siteUrl}/#application`,
+  name: siteName,
+  applicationCategory: "EducationalApplication",
+  operatingSystem: "Web",
+  url: `${siteUrl}/`,
+  description: siteDescription,
+  isAccessibleForFree: true,
+};
+
+// Educational Organization Schema
+// Use Organization rather than EducationalOrganization
+// unless LearnYah is formally an educational institution.
+const organizationSchema = {
+  "@type": "Organization",
+  "@id": `${siteUrl}/#organization`,
+  name: siteName,
+  url: `${siteUrl}/`,
+  logo: `${siteUrl}/icon.png`,
+  description: siteDescription,
+};
+
+// Root Layout
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
-  const websiteSchema = {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  const structuredData = {
     "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "LearnYah",
-    alternateName: ["Learn Yah"],
-    url: `${siteUrl}/`,
+    "@graph": [
+      websiteSchema,
+      softwareSchema,
+      organizationSchema,
+    ],
   };
 
   return (
     <html lang="en">
       <head>
-        {/* Font connections */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        {/* Google Fonts */}
+        <link
+          rel="preconnect"
+          href="https://fonts.googleapis.com"
+        />
         <link
           rel="preconnect"
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
 
-        {/* LearnYah favicon */}
-        <link
-          rel="icon"
-          href="/icon.png"
-          type="image/png"
-          sizes="512x512"
-        />
-
-        {/* Google Website Name structured data */}
+        {/* Google structured data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(websiteSchema),
+            __html: JSON.stringify(structuredData).replace(
+              /</g,
+              "\\u003c"
+            ),
           }}
         />
       </head>
