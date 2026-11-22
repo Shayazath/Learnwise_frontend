@@ -1,4 +1,3 @@
-
 import type { Metadata } from "next";
 import { AuthProvider } from "@/app/providers/AuthProvider";
 import "./globals.css";
@@ -7,12 +6,10 @@ const siteUrl = "https://learnyah-frontend.vercel.app";
 
 const siteName = "LearnYah";
 
-const siteTitle =
-  "LearnYah | Your Personal AI Learning Assistant";
+const siteTitle = "LearnYah | Your Personal AI Learning Assistant";
 
 const siteDescription =
-  "LearnYah is your personal AI learning assistant. Upload study materials, ask questions, understand complex concepts, and test your knowledge with AI-powered quizzes.";
-
+  "LearnYah is your personal AI tutor. Upload study materials, ask questions, understand concepts, and practice with AI-powered quizzes.";
 // SEO Metadata
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -82,20 +79,20 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
 
+
   openGraph: {
     type: "website",
     locale: "en_US",
     url: siteUrl,
-    siteName: siteName,
+    siteName: "LearnYah",
     title: siteTitle,
-    description:
-      "Learn smarter with LearnYah, your personal AI tutor. Upload study materials, ask questions, explore concepts, and test your knowledge with AI-powered quizzes.",
+    description: siteDescription,
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "LearnYah - Your Personal AI Learning Assistant",
+        alt: "LearnYah AI Learning Assistant",
       },
     ],
   },
@@ -158,21 +155,14 @@ export default function RootLayout({
 }>) {
   const structuredData = {
     "@context": "https://schema.org",
-    "@graph": [
-      websiteSchema,
-      softwareSchema,
-      organizationSchema,
-    ],
+    "@graph": [websiteSchema, softwareSchema, organizationSchema],
   };
 
   return (
     <html lang="en">
       <head>
         {/* Google Fonts */}
-        <link
-          rel="preconnect"
-          href="https://fonts.googleapis.com"
-        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
           href="https://fonts.gstatic.com"
@@ -183,10 +173,7 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData).replace(
-              /</g,
-              "\\u003c"
-            ),
+            __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
           }}
         />
       </head>
