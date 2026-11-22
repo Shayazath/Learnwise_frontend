@@ -1,15 +1,24 @@
+
 import type { Metadata } from "next";
 import { AuthProvider } from "@/app/providers/AuthProvider";
+// Next.js handles global CSS imports; this also suppresses editors without Next's CSS module declarations.
+// @ts-ignore
 import "./globals.css";
 
+// Website configuration
 const siteUrl = "https://learnyah-frontend.vercel.app";
 
 const siteName = "LearnYah";
 
-const siteTitle = "LearnYah | Your Personal AI Learning Assistant";
+const siteTitle =
+  "LearnYah | Your Personal AI Learning Assistant";
 
 const siteDescription =
   "LearnYah is your personal AI tutor. Upload study materials, ask questions, understand concepts, and practice with AI-powered quizzes.";
+
+const ogDescription =
+  "Learn smarter with LearnYah. Upload study materials, ask questions, understand concepts, and practice with AI quizzes.";
+
 // SEO Metadata
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -49,12 +58,8 @@ export const metadata: Metadata = {
     },
   ],
 
-  creator: "LearnYah",
-  publisher: "LearnYah",
-
-  alternates: {
-    canonical: "/",
-  },
+  creator: siteName,
+  publisher: siteName,
 
   robots: {
     index: true,
@@ -68,31 +73,19 @@ export const metadata: Metadata = {
     },
   },
 
-  icons: {
-    icon: [
-      {
-        url: "/icon.png",
-        type: "image/png",
-        sizes: "512x512",
-      },
-    ],
-    apple: "/apple-touch-icon.png",
-  },
-
-
   openGraph: {
     type: "website",
     locale: "en_US",
     url: siteUrl,
-    siteName: "LearnYah",
+    siteName: siteName,
     title: siteTitle,
-    description: siteDescription,
+    description: ogDescription,
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "LearnYah AI Learning Assistant",
+        alt: "LearnYah - Your Personal AI Learning Assistant",
       },
     ],
   },
@@ -100,19 +93,19 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: siteTitle,
-    description: siteDescription,
+    description: ogDescription,
     images: ["/og-image.png"],
   },
 
   category: "education",
 
-  // Add your actual verification token if needed.
+  // Uncomment if you use Google meta-tag verification.
   // verification: {
-  //   google: "YOUR_GOOGLE_VERIFICATION_TOKEN",
+  //   google: "YOUR_ACTUAL_GOOGLE_VERIFICATION_TOKEN",
   // },
 };
 
-// Google WebSite Schema
+// WebSite schema for Google's site-name system
 const websiteSchema = {
   "@type": "WebSite",
   "@id": `${siteUrl}/#website`,
@@ -123,7 +116,7 @@ const websiteSchema = {
   inLanguage: "en",
 };
 
-// Software Application Schema
+// SoftwareApplication schema
 const softwareSchema = {
   "@type": "SoftwareApplication",
   "@id": `${siteUrl}/#application`,
@@ -132,12 +125,9 @@ const softwareSchema = {
   operatingSystem: "Web",
   url: `${siteUrl}/`,
   description: siteDescription,
-  isAccessibleForFree: true,
 };
 
-// Educational Organization Schema
-// Use Organization rather than EducationalOrganization
-// unless LearnYah is formally an educational institution.
+// Organization schema
 const organizationSchema = {
   "@type": "Organization",
   "@id": `${siteUrl}/#organization`,
@@ -147,22 +137,31 @@ const organizationSchema = {
   description: siteDescription,
 };
 
+// Structured data
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    websiteSchema,
+    softwareSchema,
+    organizationSchema,
+  ],
+};
+
 // Root Layout
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@graph": [websiteSchema, softwareSchema, organizationSchema],
-  };
-
   return (
     <html lang="en">
       <head>
         {/* Google Fonts */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.googleapis.com"
+        />
+
         <link
           rel="preconnect"
           href="https://fonts.gstatic.com"
@@ -173,7 +172,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+            __html: JSON.stringify(structuredData).replace(
+              /</g,
+              "\\u003c"
+            ),
           }}
         />
       </head>
